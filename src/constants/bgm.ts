@@ -1,0 +1,60 @@
+import type { BgmOption } from '../types';
+
+export const BGM_TRACKS: BgmOption[] = [
+  {
+    id: 'auto',
+    name: '🤖 AI 자동 매칭 (주제 맞춤)',
+    mood: 'auto',
+    filename: 'auto',
+    description: '주제(공포/꿀팁/건강/역사/테크 등)에 맞춰 최적의 BGM을 AI가 자동 선곡합니다.',
+    copyrightStatus: '100% 수익창출 안전 (No Content ID)',
+  },
+  {
+    id: 'bgm_upbeat',
+    name: '☀️ 밝고 경쾌한 팝 (Upbeat)',
+    mood: 'upbeat',
+    filename: 'bgm_upbeat.mp3',
+    description: '생활 꿀팁, 유용한 정보, 일상, 요리/음식 등 활기찬 쇼츠에 최적화',
+    copyrightStatus: '100% 로열티 프리 (상업적 이용 가능)',
+  },
+  {
+    id: 'bgm_suspense',
+    name: '🌑 미스터리 & 긴장감 (Suspense)',
+    mood: 'suspense',
+    filename: 'bgm_suspense.mp3',
+    description: '공포, 충격 실화, 범죄, 미스터리 등 심장 쫄깃한 영상에 최적화',
+    copyrightStatus: '100% 로열티 프리 (상업적 이용 가능)',
+  },
+  {
+    id: 'bgm_lofi',
+    name: '☕ 감성 힐링 & 로파이 (Lofi)',
+    mood: 'lofi',
+    filename: 'bgm_lofi.mp3',
+    description: '수면, 힐링, 건강 상식, 명상, 위로 등 편안한 쇼츠에 최적화',
+    copyrightStatus: '100% 로열티 프리 (상업적 이용 가능)',
+  },
+  {
+    id: 'bgm_epic',
+    name: '⚔️ 웅장한 시네마틱 (Epic)',
+    mood: 'epic',
+    filename: 'bgm_epic.mp3',
+    description: '역사 비화, 성공 동기부여, 위인 명언 등 웅장한 쇼츠에 최적화',
+    copyrightStatus: '100% 로열티 프리 (상업적 이용 가능)',
+  },
+  {
+    id: 'bgm_tech',
+    name: '⚡ 모던 테크 & 지식 (Tech)',
+    mood: 'tech',
+    filename: 'bgm_tech.mp3',
+    description: 'AI, 최신 과학, IT 트렌드, 지식 교양 등 세련된 쇼츠에 최적화',
+    copyrightStatus: '100% 로열티 프리 (상업적 이용 가능)',
+  },
+  {
+    id: 'none',
+    name: '🔇 배경음악 없음',
+    mood: 'none',
+    filename: 'none',
+    description: 'BGM 없이 AI 성우 목소리만 담백하게 출력합니다. (각 플랫폼 앱 공식 사운드 적용 시 권장)',
+    copyrightStatus: '저작권 이슈 제로 (보이스 단독)',
+  },
+];

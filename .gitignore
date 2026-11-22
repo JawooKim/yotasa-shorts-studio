@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-electron
+release
+.env
+.env.local
+*.log
+
+# 판매자 전용 (개인키 등)은 저장소 밖에 보관하지만 실수 방지용
+*.pem
+issued-licenses.csv
+
+# 관리자 키 검증값 (저장소에 올리지 않음)
+admin.local.json
+
+# 실행 데이터·내부 작업 기록·판매 운영 문서 (공개 저장소에서 제외, 로컬에만 보관)
+kshorts-data/
+.agents/
+AGENTS.md
+GEMINI.md
+DEVELOPMENT_STANDARDS.md
+docs/kmong/
