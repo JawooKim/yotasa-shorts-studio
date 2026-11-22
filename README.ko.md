@@ -133,6 +133,12 @@ flowchart LR
 
 ---
 
+## 🏭 쇼츠 자동 공장 (GitHub Actions)
+
+같은 제작 엔진을 GitHub Actions에서 창 없이 돌립니다. `shorts/<작업이름>/job.json`과 장면 사진을 `master`에 올리거나, **Actions → 쇼츠 자동 공장 → Run workflow**에 job을 붙여 넣으면 mp4, 썸네일, 유튜브 문구가 **Releases**에 올라옵니다. job 형식은 [`shorts/README.md`](shorts/README.md)를, Claude 프로젝트 설정 방법은 [`claude-project/SETUP.md`](claude-project/SETUP.md)를 보세요.
+
+---
+
 ## 🛠 개발 실행
 
 **필요한 것:** Node.js 20 이상, Windows 10/11 64비트. 영상 합성은 `ffmpeg-static`이 들어 있어 따로 설치하지 않아도 됩니다.

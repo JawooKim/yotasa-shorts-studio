@@ -1,0 +1,130 @@
+# 🏭 쇼츠 자동 공장
+# - shorts/<이름>/job.json (+ 이미지·영상) 을 master 에 올리면 자동으로 9:16 쇼츠를 만든다.
+# - Actions 탭 → "쇼츠 자동 공장" → Run workflow 에 job JSON 을 붙여 넣어도 된다.
+# - 완성된 영상은 Releases(쇼츠 한 편마다 하나)와 실행 결과의 Artifacts 에 올라간다.
+name: 쇼츠 자동 공장
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'shorts/**'
+      - '!shorts/_*/**'
+  workflow_dispatch:
+    inputs:
+      job_json:
+        description: 'job.json 내용 (비워 두면 slug 의 shorts 폴더를 다시 만든다)'
+        required: false
+        type: string
+      slug:
+        description: '영문 작업 이름 (예: 2026-11-22-morning-habit)'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shorts-factory-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      ELECTRON_SKIP_BINARY_DOWNLOAD: '1'
+      KSHORTS_USER_DATA: ${{ github.workspace }}/.factory-data
+      FACTORY_OUT_DIR: ${{ github.workspace }}/out
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+      PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+      PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+      FAL_API_KEY: ${{ secrets.FAL_API_KEY }}
+      STABILITY_API_KEY: ${{ secrets.STABILITY_API_KEY }}
+      IMAGE_ENGINE: ${{ vars.IMAGE_ENGINE }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 한글 폰트 · ffmpeg 준비
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk ffmpeg > /dev/null
+          mkdir -p ~/.local/share/fonts
+          # 앱 기본 자막 폰트(Pretendard). 받지 못해도 Noto CJK 로 대신 그린다.
+          curl -fsSL -o /tmp/pretendard.zip https://github.com/orioncactus/pretendard/releases/download/v1.3.9/Pretendard-1.3.9.zip \
+            && unzip -qo /tmp/pretendard.zip 'public/static/*.otf' -d /tmp/pretendard \
+            && cp /tmp/pretendard/public/static/*.otf ~/.local/share/fonts/ || echo "Pretendard 다운로드 실패 - Noto CJK 사용"
+          fc-cache -f > /dev/null
+
+      - name: 의존성 설치 · 엔진 빌드
+        run: |
+          npm ci --no-audit --no-fund
+          node factory/build.mjs
+
+      - name: 쇼츠 만들기
+        env:
+          FACTORY_JOB_JSON: ${{ inputs.job_json }}
+          FACTORY_JOB_SLUG: ${{ inputs.slug }}
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "$FACTORY_JOB_JSON" ]; then
+              node factory/render.mjs --inline
+            elif [ -n "$FACTORY_JOB_SLUG" ]; then
+              node factory/render.mjs "shorts/$FACTORY_JOB_SLUG/job.json"
+            else
+              node factory/render.mjs --all
+            fi
+          else
+            if [ -z "$BEFORE_SHA" ] || [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "$BEFORE_SHA" 2>/dev/null; then
+              CHANGED=$(git diff-tree --no-commit-id --name-only -r HEAD -- shorts/)
+            else
+              CHANGED=$(git diff --name-only "$BEFORE_SHA" HEAD -- shorts/)
+            fi
+            echo "바뀐 파일:"; echo "$CHANGED"
+            # 지운 파일만 있는 경우 등은 render.mjs 가 job.json 이 있는 폴더만 골라낸다.
+            printf '%s\n' "$CHANGED" > "$RUNNER_TEMP/changed.txt"
+            node factory/render.mjs --changed-file "$RUNNER_TEMP/changed.txt"
+          fi
+
+      - name: 결과 올리기 (Artifacts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shorts-${{ github.run_number }}
+          path: out/
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: 결과 올리기 (Releases)
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -f out/results.json ] || exit 0
+          echo "## 🎬 완성된 쇼츠" >> "$GITHUB_STEP_SUMMARY"
+          for dir in out/*/; do
+            slug=$(basename "$dir")
+            [ -f "$dir/$slug.mp4" ] || continue
+            tag="short-$slug-${{ github.run_number }}"
+            title=$(sed -n '1s/^제목: //p' "$dir/youtube.txt")
+            gh release create "$tag" "$dir"/* \
+              --title "🎬 ${title:-$slug}" \
+              --notes-file "$dir/youtube.txt" \
+              --target "${{ github.sha }}"
+            url="${{ github.server_url }}/${{ github.repository }}/releases/tag/$tag"
+            echo "- **${title:-$slug}** → [$tag]($url)" >> "$GITHUB_STEP_SUMMARY"
+          done
