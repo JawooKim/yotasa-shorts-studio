@@ -173,6 +173,8 @@ const IS_BUYER_EDITION: boolean = EDITION_FLAG === 'buyer';
 // 라이선스 서버 주소는 저장소에 두지 않는다. 빌드할 때 admin.local.json(licenseServer) 또는 환경 변수 KSHORTS_LICENSE_SERVER에서 넣는다.
 const LICENSE_SERVER_RAW = '__KSHORTS_LICENSE_SERVER__';
 const LICENSE_SERVER = /^https?:\/\//.test(LICENSE_SERVER_RAW) ? LICENSE_SERVER_RAW.replace(/\/+$/, '') : '';
+// 무료 이미지 엔진은 노출 이미지를 만들 수 있어 안전 필터(safe=true)와 함께 붙인다. FLUX는 제외 프롬프트가 없어 "no nudity" 같은 단어는 오히려 끌려가므로 긍정 표현만 쓴다
+const SAFE_IMAGE_TERMS = 'family friendly wholesome scene, any people wearing modest everyday casual clothes';
 const LICENSE_SERVER_PUBLIC_HEX = 'c848fef9a6f4fe7dc10e76eeda2032e041cf3a8af7d4b45ec236f810d02f3cde';
 const ED25519_SPKI_PREFIX = Buffer.from('302a300506032b6570032100', 'hex');
 const COST_PER_SHORT = 100;
@@ -1929,7 +1931,7 @@ function translateKoreanVisualKeywords(koreanText: string): string {
     [/(?:인공지능|\bai\b|로봇|휴머노이드|챗gpt|알고리즘)/, 'futuristic humanoid artificial intelligence glowing holographic neural network tech'],
     [/(?:컴퓨터|노트북|소프트웨어|코딩|개발자|해킹)/, 'modern high-tech multi-monitor workstation glowing code sleek setup'],
     [/(?:스마트폰|핸드폰|아이폰|갤럭시|모바일\s*앱)/, 'sleek premium smartphone display held in hand vibrant modern UI screen'],
-    [/(?:운동|헬스|피트니스|근육|웨이트|스쿼트|덤벨|바디프로필)/, 'athletic muscular fitness training in state-of-the-art gym dramatic rim lighting'],
+    [/(?:운동|헬스|피트니스|근육|웨이트|스쿼트|덤벨|바디프로필)/, 'person in an athletic t-shirt exercising in a bright modern gym with dumbbells'],
     [/(?:조깅|달리기|러닝|마라톤|유산소)/, 'energetic runner athlete sprinting in outdoor morning park path sunrise'],
     [/(?:다이어트|식단|체중|살빼기|칼로리|샐러드)/, 'fresh colorful organic superfood detox salad bowl fresh greens vibrant health'],
     [/(?:축구|손흥민|월드컵|골|경기장|축구공)/, 'intense professional football match on illuminated green stadium turf'],
@@ -2019,8 +2021,11 @@ function getSpecificSceneVisualElement(sceneText: string, sceneIdx: number, isTh
   }
 
   // 5. Exercise, Gym & Fitness
-  if (/(?:운동|헬스|피트니스|근육|다이어트|스트레칭|조깅|러닝|체지방|트레이닝|바디프로필|복근|스쿼트|웨이트)/.test(lower)) {
-    return `${prefix}energetic athletic fitness workout in premium modern gym, determined physique, dynamic rim lighting, ${angle}`;
+  if (/(?:스트레칭|요가|필라테스|맨손\s*체조)/.test(lower)) {
+    return `${prefix}person in a comfortable long-sleeve t-shirt and track pants doing gentle stretching on a yoga mat in a bright living room, ${angle}, ${light}`;
+  }
+  if (/(?:운동|헬스|피트니스|근육|다이어트|조깅|러닝|체지방|트레이닝|바디프로필|복근|스쿼트|웨이트)/.test(lower)) {
+    return `${prefix}person in an athletic t-shirt and joggers exercising with dumbbells in a bright modern gym, dynamic rim lighting, ${angle}`;
   }
 
   // 6. Medical, Hospital & Doctors
@@ -2563,12 +2568,12 @@ async function generateAiSceneImage(
 
   // Provider 6: Pollinations FLUX.1 (High-Reliability Free AI Generation)
   const tryPollinationsFlux = async (): Promise<Buffer | null> => {
-    const cleanNegative = 'single full-bleed vertical composition filling the whole frame, strictly no text, no letters, no logos, no watermark, no frame, no borders, no letterbox, no black bars, no collage, no split screen, no distorted anatomy';
+    const cleanNegative = `single full-bleed vertical composition filling the whole frame, ${SAFE_IMAGE_TERMS}, strictly no text, no letters, no logos, no watermark, no frame, no borders, no letterbox, no black bars, no collage, no split screen, no distorted anatomy`;
     const baseSeed = Math.floor(Math.random() * 80000000) + (Date.now() % 10000000) + sceneIdx * 104729;
     for (let attempt = 0; attempt < 3; attempt++) {
       const seed = baseSeed + attempt * 17923;
       const pollinationsPrompt = encodeURIComponent(`${englishVisualPrompt}, ${cleanNegative}, seed_${seed % 9999}`);
-      const pollinationsUrl = `https://image.pollinations.ai/prompt/${pollinationsPrompt}?width=${POLLINATIONS_REQ_WIDTH}&height=${POLLINATIONS_REQ_HEIGHT}&nologo=true&seed=${seed}&model=flux`;
+      const pollinationsUrl = `https://image.pollinations.ai/prompt/${pollinationsPrompt}?width=${POLLINATIONS_REQ_WIDTH}&height=${POLLINATIONS_REQ_HEIGHT}&nologo=true&safe=true&seed=${seed}&model=flux`;
       console.log(`[FLUX Engine] Fetching fresh unique AI image for scene ${sceneIdx + 1} (${isThumbnail ? 'Thumbnail' : 'Scene'}, seed: ${seed}, attempt ${attempt + 1})...`);
       const buf = await fetchImageBufferWithRetry(pollinationsUrl);
       if (buf) {
@@ -2584,8 +2589,8 @@ async function generateAiSceneImage(
     try {
       const baseSeed = Math.floor(Math.random() * 80000000) + (Date.now() % 10000000) + sceneIdx * 104729;
       const turboSeed = baseSeed + 99999;
-      const turboPrompt = encodeURIComponent(`${englishVisualPrompt}, single full-bleed vertical composition, strictly no text, no watermark, no black bars, no collage, no split screen, turbo_seed_${turboSeed % 9999}`);
-      const turboUrl = `https://image.pollinations.ai/prompt/${turboPrompt}?width=${POLLINATIONS_REQ_WIDTH}&height=${POLLINATIONS_REQ_HEIGHT}&nologo=true&seed=${turboSeed}&model=turbo`;
+      const turboPrompt = encodeURIComponent(`${englishVisualPrompt}, single full-bleed vertical composition, ${SAFE_IMAGE_TERMS}, strictly no text, no watermark, no black bars, no collage, no split screen, turbo_seed_${turboSeed % 9999}`);
+      const turboUrl = `https://image.pollinations.ai/prompt/${turboPrompt}?width=${POLLINATIONS_REQ_WIDTH}&height=${POLLINATIONS_REQ_HEIGHT}&nologo=true&safe=true&seed=${turboSeed}&model=turbo`;
       const turboBuf = await fetchImageBufferWithRetry(turboUrl);
       if (turboBuf) {
         const verified = verifyAndRecordBuffer(turboBuf, turboUrl);
@@ -5801,7 +5806,7 @@ ipcMain.handle('generate-hooking-variants', async (_, { topic }: { topic: string
     {
       id: 'variant_a',
       type: '🚨 손실 회피 / 경고형',
-      badge: '알고리즘 CTR 96%',
+      badge: '손실 회피형',
       title: `절대 ${base} 모르면 평생 손해봅니다`,
       hookIntro: `🚨 놓치면 후회하는 3초 비밀`,
       visualKeyword: `Dramatic shock warning closeup hero shot of ${base}, high tension, hyper-realistic, 8k viral`,
@@ -5811,7 +5816,7 @@ ipcMain.handle('generate-hooking-variants', async (_, { topic }: { topic: string
     {
       id: 'variant_b',
       type: '💡 호기심 / 질문 유도형',
-      badge: '호기심 폭발 CTR 93%',
+      badge: '호기심 유발형',
       title: `상위 1%만 알고 있는 ${base}의 소름돋는 진실?`,
       hookIntro: `💡 당신만 몰랐던 뜻밖의 사실`,
       visualKeyword: `Mysterious glowing secret discovery scene of ${base}, cinematic dramatic lighting, volumetric atmosphere`,
@@ -5821,7 +5826,7 @@ ipcMain.handle('generate-hooking-variants', async (_, { topic }: { topic: string
     {
       id: 'variant_c',
       type: '⚡ 초단기 / 3줄 요약형',
-      badge: '1분 완결 CTR 90%',
+      badge: '요약형',
       title: `단 1분 만에 끝내는 ${base} 핵심 요약 TOP 3`,
       hookIntro: `⚡ 1분 만에 마스터하는 꿀팁`,
       visualKeyword: `Vibrant eye-catching 3D modern clean showcase of ${base}, bold composition, sharp focus, octane render`,
