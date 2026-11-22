@@ -1,0 +1,51 @@
+{
+  "title": "조종면허 필기 1번 · 만월 야간 항행",
+  "topic": "일반조종면허 필기 1번 문제 해설: 만월 야간 항행 시 달의 위치",
+  "voice": "ko-KR-InJoonNeural",
+  "style": "k_documentary",
+  "bgm": "bgm_tech",
+  "titleStyle": "quiz_card",
+  "subtitleStyle": "black_box",
+  "transition": "fade",
+  "hook": { "title": "조종면허 필기 1번", "subtitle": "달이 어디 있으면 위험할까?" },
+  "scenes": [
+    {
+      "text": "보름달 뜬 밤바다, 달이 어디에 있을 때 불빛이 안 보일까요?",
+      "visualPrompt": "small motorboat at night on a wavy sea under a bright full moon, cinematic, moody blue tones, no people, no text"
+    },
+    {
+      "text": "일반조종면허 필기, 수상레저 안전 1번 문제입니다.",
+      "visualPrompt": "dashboard of a recreational motorboat at night with glowing instruments, shallow depth of field, no text"
+    },
+    {
+      "text": "파랑이 있는 만월의 밤, 달이 빈칸에 놓이면 약한 등화가 가까이서도 잘 안 보입니다.",
+      "visualPrompt": "faint small navigation light on a buoy barely visible on choppy moonlit water at night, realistic, no text"
+    },
+    {
+      "text": "보기는 갑 전방, 을 후방, 병 측방, 정 머리 위. 정답을 골라 보세요.",
+      "visualPrompt": "view from the helm of a boat at night looking forward over dark rippling water, full moon glow, tense atmosphere, no text"
+    },
+    {
+      "text": "정답은 을, 후방입니다.",
+      "visualPrompt": "full moon low in the sky behind a motorboat at night, silhouette of the stern, moonlight path on the waves, no text"
+    },
+    {
+      "text": "그래서 야간에는 항해등 말고 경계에 방해되는 등화는 모두 가려야 합니다.",
+      "visualPrompt": "dimmed cabin lights on a small boat at night, only red and green side navigation lights glowing, calm cinematic, no text"
+    },
+    {
+      "text": "그래야 보트 밖의 미약한 등화나 부표, 어구 부자를 쉽게 발견할 수 있어요.",
+      "visualPrompt": "fishing float and small buoy with a weak light on dark sea at night seen from a boat, realistic, no text"
+    },
+    {
+      "text": "만월 밤, 달이 후방이면 주의! 정답은 을, 후방. 다음 문제도 이어서 풀어 보세요.",
+      "visualPrompt": "motorboat cruising carefully on a moonlit sea at night, wide shot, peaceful, no text"
+    }
+  ],
+  "youtube": {
+    "title": "조종면허 필기 1번｜달이 '여기' 있으면 불빛이 안 보인다 #shorts",
+    "description": "일반조종면허(1·2급) 필기 문제은행 1번 해설입니다.\n만월의 야간 항행 시 달이 후방에 놓이면 광력이 약한 등화가 근거리에서도 잘 보이지 않습니다.\n기준: 해양경찰청 일반조종면허 문제은행 700문제('25년)",
+    "tags": ["조종면허", "일반조종면허", "조종면허필기", "수상레저", "보트면허", "문제은행", "수상레저안전", "shorts"],
+    "pinnedComment": "1번 맞히셨나요? 헷갈리는 문제 번호를 댓글로 남겨 주시면 먼저 해설해 드릴게요!"
+  }
+}
