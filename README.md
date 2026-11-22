@@ -2,94 +2,98 @@
 
 # 🎬 K-Shorts Studio
 
-**주제 한 줄 → 대본 · 한국어 음성 · 장면 이미지 · 자막 · 배경음악까지 9:16 쇼츠 한 편**
+**One topic line → script · Korean voice-over · scene images · subtitles · background music — a finished 9:16 short**
 
-Windows 데스크톱 프로그램 · Electron + React + TypeScript · FFmpeg / libass
+Windows desktop app · Electron + React + TypeScript · FFmpeg / libass
 
 ![version](https://img.shields.io/badge/version-1.4.14-2563eb)
 ![platform](https://img.shields.io/badge/platform-Windows%2010%2F11%20x64-0ea5e9)
 ![electron](https://img.shields.io/badge/Electron-React%20%2B%20Vite-8b5cf6)
 ![license](https://img.shields.io/badge/license-MIT-22c55e)
 
-<img src="docs/screenshots/dashboard.png" alt="K-Shorts Studio 대시보드" width="860">
+**English** · [한국어](README.ko.md)
+
+<img src="docs/screenshots/dashboard.png" alt="K-Shorts Studio dashboard" width="860">
 
 </div>
 
----
-
-## 📌 목차
-
-- [이런 영상이 나옵니다](#-이런-영상이-나옵니다)
-- [화면 둘러보기](#-화면-둘러보기)
-- [주요 기능](#-주요-기능)
-- [제작 흐름](#-제작-흐름)
-- [개발 실행](#-개발-실행)
-- [설치 프로그램 빌드](#-설치-프로그램-빌드)
-- [라이선스 키와 관리자 판](#-라이선스-키와-관리자-판)
-- [데이터와 보안](#-데이터와-보안)
-- [폴더 구조](#-폴더-구조)
-- [라이선스](#-라이선스)
+> The app UI and the generated videos are in Korean. This README is in English; a Korean version is available at [README.ko.md](README.ko.md).
 
 ---
 
-## 🎞 이런 영상이 나옵니다
+## 📌 Contents
 
-API 키 없이 **무료 엔진만으로** 만든 실제 결과물에서 장면 3개를 뽑았습니다. 대본 *"아침 10분이 하루를 바꿉니다. 첫째, 물 한 잔을 마십니다. 둘째, 오늘 할 일 세 가지를 적습니다."* 를 넣고 1080×1920으로 렌더링했습니다.
+- [Sample output](#-sample-output)
+- [Screens](#-screens)
+- [Features](#-features)
+- [Pipeline](#-pipeline)
+- [Development](#-development)
+- [Building the installer](#-building-the-installer)
+- [License keys and admin edition](#-license-keys-and-admin-edition)
+- [Data and security](#-data-and-security)
+- [Project layout](#-project-layout)
+- [License](#-license)
+
+---
+
+## 🎞 Sample output
+
+Three frames from a real render made **with free engines only (no API keys)**. The input script was *"Ten minutes in the morning change your day. First, drink a glass of water. Second, write down three things to do today."* (in Korean), rendered at 1080×1920.
 
 <div align="center">
-<img src="docs/screenshots/sample-frames.jpg" alt="실제 렌더링 결과 장면 3컷" width="720">
+<img src="docs/screenshots/sample-frames.jpg" alt="Three frames from a real render" width="720">
 
-<sub>상단 제목 띠 · 3초 후킹 문구 · 문장별 장면 이미지 · 키워드 강조 자막</sub>
+<sub>Top title bar · 3-second hook · one image per sentence · keyword-highlighted subtitles</sub>
 </div>
 
 ---
 
-## 🖥 화면 둘러보기
+## 🖥 Screens
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### ✍️ 쇼츠 자동 제작
-주제를 고르거나 직접 입력하면 대본, 후킹 문구, 썸네일 문구를 만들어 줍니다. 원클릭 프리셋으로 목소리, 자막, 화풍, 배경음악을 한 번에 맞춥니다.
+### ✍️ Auto short creation
+Pick or type a topic and get a script, hook lines and thumbnail copy. One-click presets set the voice, subtitles, art style and background music together.
 
-<img src="docs/screenshots/create.png" alt="쇼츠 자동 제작 화면">
+<img src="docs/screenshots/create.png" alt="Short creation screen">
 
 </td>
 <td width="50%" valign="top">
 
-### 🎥 영상 분석 쇼츠
-가지고 있는 가로 영상을 올리면 구간을 골라 9:16 쇼츠로 자릅니다. 원본 음성을 지우거나 유지하고, BGM과 자막 제목을 얹을 수 있습니다.
+### 🎥 Video → Shorts
+Upload a landscape video and cut selected segments into 9:16 shorts. Keep or remove the original audio and add BGM and a title.
 
-<img src="docs/screenshots/video-to-shorts.png" alt="영상 분석 쇼츠 화면">
+<img src="docs/screenshots/video-to-shorts.png" alt="Video to shorts screen">
 
 </td>
 </tr>
 <tr>
 <td width="50%" valign="top">
 
-### ⚡ 예약 발행 (Auto-Pilot)
-정해진 시각과 주기에 맞춰 주제 기획부터 렌더링, YouTube 업로드, 첫 댓글까지 이어서 처리합니다. 이미 다룬 주제는 자동으로 피합니다.
+### ⚡ Scheduled publishing (Auto-Pilot)
+At a set time and interval it plans a topic, renders, uploads to YouTube and posts the first comment. Topics already covered are skipped.
 
-<img src="docs/screenshots/autopilot.png" alt="예약 발행 화면">
+<img src="docs/screenshots/autopilot.png" alt="Auto-Pilot screen">
 
 </td>
 <td width="50%" valign="top">
 
-### 🎨 템플릿 · 보이스 프리셋
-목소리, 자막 폰트, 자막 스타일, 화풍, 배경음악 조합을 프리셋으로 고릅니다. 한국어 음성 8종, 화풍 13종, 폰트 5종이 들어 있습니다.
+### 🎨 Templates and voice presets
+Choose combinations of voice, subtitle font, subtitle style, art style and BGM. Ships with 8 Korean voices, 13 art styles and 5 fonts.
 
-<img src="docs/screenshots/presets.png" alt="템플릿 보이스 화면">
+<img src="docs/screenshots/presets.png" alt="Templates and voices screen">
 
 </td>
 </tr>
 <tr>
 <td colspan="2" valign="top">
 
-### 🔑 AI · 엔진 설정
-API 키는 모두 선택입니다. 키가 없으면 내장 규칙 대본과 무료 이미지 엔진으로 만들고, 키를 넣으면 Gemini · OpenAI · ElevenLabs · Pexels · Pixabay 등을 씁니다. GPU 인코더(NVENC · QSV)는 자동으로 감지합니다.
+### 🔑 AI and engine settings
+All API keys are optional. Without keys the app uses a built-in rule-based script and a free image engine; with keys it can use Gemini, OpenAI, ElevenLabs, Pexels, Pixabay and more. GPU encoders (NVENC, QSV) are detected automatically.
 
-<div align="center"><img src="docs/screenshots/settings.png" alt="AI 엔진 설정 화면" width="720"></div>
+<div align="center"><img src="docs/screenshots/settings.png" alt="AI and engine settings screen" width="720"></div>
 
 </td>
 </tr>
@@ -97,78 +101,78 @@ API 키는 모두 선택입니다. 키가 없으면 내장 규칙 대본과 무�
 
 ---
 
-## ✨ 주요 기능
+## ✨ Features
 
-| 영역 | 내용 |
+| Area | Details |
 |---|---|
-| 🧠 **AI 대본** | Gemini 또는 OpenAI 키로 후킹 대본과 장면 분할을 만듭니다. 키가 없으면 내장 규칙으로 대본을 만듭니다. 한 문장이 한 장면이 되고, 최대 8장면입니다. |
-| 🗣 **한국어 음성(TTS)** | Edge-TTS(무료)가 기본이고, ElevenLabs 키가 있으면 감정 표현 음성도 쓸 수 있습니다. Edge-TTS는 처음 쓸 때 자동 설치됩니다. |
-| 🖼 **장면 이미지 · 영상** | 무료 이미지 생성(FLUX), Gemini Imagen, DALL·E 3, Fal, Stability, Pexels/Pixabay 스톡 사진·영상 중에서 고릅니다. 한국어 대본은 영문 시각 키워드로 바꿔 넘깁니다. |
-| 💬 **자막 · 제목** | libass(ASS) 자막 스타일, 단어 단위 노래방 자막, 키워드 강조, 팝업 애니메이션, 상단 제목 띠, 3초 후킹 문구를 지원합니다. |
-| 🎵 **배경음악 · 효과음** | 직접 합성한 로열티 프리 음원(`scripts/generate-bgm.js`, `scripts/generate-sfx.js`)을 씁니다. 음성이 나오는 구간에서는 배경음악 볼륨이 자동으로 줄어듭니다(사이드체인 덕킹). |
-| ✂️ **롱폼 → 쇼츠** | 긴 영상에서 구간을 골라 9:16 클립으로 자릅니다. 원본 음성 유지·제거, BGM 믹싱을 지원합니다. |
-| 📦 **대량 생성** | 엑셀이나 목록으로 여러 주제를 한 번에 만듭니다. 동시 렌더링 수를 고를 수 있습니다. |
-| 🗓 **예약 · 자동 발행** | 시각·주기 예약, YouTube 자동 업로드와 첫 댓글, 발행 캘린더, 텔레그램 완료 알림을 지원합니다. |
-| 🌏 **다국어** | 제목과 대본을 영어·일본어·스페인어로 옮겨 해외 채널용 문구를 만듭니다. |
-| 🚀 **GPU 가속** | NVENC · QSV · AMF 인코더를 자동으로 찾고, 없으면 CPU(libx264)로 렌더링합니다. |
+| 🧠 **AI script** | Hook script and scene split with a Gemini or OpenAI key; a built-in rule-based script without keys. One sentence becomes one scene, up to 8 scenes. |
+| 🗣 **Korean TTS** | Edge-TTS (free) by default, ElevenLabs voices with a key. Edge-TTS installs itself on first use. |
+| 🖼 **Scene images and video** | Free image generation (FLUX), Gemini Imagen, DALL·E 3, Fal, Stability, or Pexels/Pixabay stock photos and clips. Korean script lines are turned into English visual keywords first. |
+| 💬 **Subtitles and titles** | libass (ASS) styles, word-level karaoke subtitles, keyword highlighting, pop-up animation, top title bar, 3-second hook intro. |
+| 🎵 **Music and SFX** | Royalty-free tracks synthesized by the project (`scripts/generate-bgm.js`, `scripts/generate-sfx.js`). Music is ducked automatically under speech (sidechain compression). |
+| ✂️ **Long-form → shorts** | Cut segments of a long video into 9:16 clips, keeping or removing the original audio and mixing BGM. |
+| 📦 **Batch creation** | Create many topics at once from a spreadsheet or list, with a selectable number of parallel renders. |
+| 🗓 **Scheduling and auto-publish** | Time/interval scheduling, YouTube auto-upload and first comment, publishing calendar, Telegram notifications. |
+| 🌏 **Multilingual** | Translate titles and scripts into English, Japanese and Spanish for overseas channels. |
+| 🚀 **GPU acceleration** | Detects NVENC, QSV and AMF encoders and falls back to CPU (libx264). |
 
 ---
 
-## 🔄 제작 흐름
+## 🔄 Pipeline
 
 ```mermaid
 flowchart LR
-    A[주제 한 줄] --> B[AI 대본 · 장면 분할]
-    B --> C[한국어 음성 + 단어 타이밍]
-    B --> D[장면별 이미지 · 영상]
-    C --> E[ASS 자막 생성]
-    D --> F[FFmpeg 합성<br/>켄 번스 · 전환]
+    A[One topic line] --> B[AI script · scene split]
+    B --> C[Korean voice + word timings]
+    B --> D[Images / clips per scene]
+    C --> E[ASS subtitles]
+    D --> F[FFmpeg compose<br/>Ken Burns · transitions]
     E --> F
-    G[BGM · 효과음<br/>자동 덕킹] --> F
-    F --> H[9:16 MP4 + 썸네일]
-    H --> I[YouTube 업로드 · 첫 댓글]
+    G[BGM · SFX<br/>auto ducking] --> F
+    F --> H[9:16 MP4 + thumbnail]
+    H --> I[YouTube upload · first comment]
 ```
 
 ---
 
-## 🛠 개발 실행
+## 🛠 Development
 
-**필요한 것:** Node.js 20 이상, Windows 10/11 64비트. 영상 합성은 `ffmpeg-static`이 들어 있어 따로 설치하지 않아도 됩니다.
+**Requirements:** Node.js 20+, Windows 10/11 64-bit. Video rendering uses the bundled `ffmpeg-static`, so no separate FFmpeg install is needed.
 
 ```bash
 npm install
-npm run build   # 화면(Vite) + 메인 프로세스(Electron) 빌드
-npm start       # 실행
+npm run build   # renderer (Vite) + main process (Electron)
+npm start       # run
 ```
 
-| 명령 | 설명 |
+| Command | Description |
 |---|---|
-| `npm run dev` | 개발 서버로 실행 (화면 수정 즉시 반영) |
-| `node scripts/test-features-runtime.js` | 기능 시험 (377개 항목) |
-| `npx tsc --noEmit` | 타입 검사 |
+| `npm run dev` | Run with the dev server (live UI reload) |
+| `node scripts/test-features-runtime.js` | Feature tests (377 checks) |
+| `npx tsc --noEmit` | Type check |
 
-> 💡 Edge-TTS는 처음 쓸 때 사용자 폴더에 자동 설치됩니다. PC에 Python이 없으면 임베디드 Python도 함께 설치합니다.
+> 💡 Edge-TTS is installed into the user folder on first use. If the PC has no Python, an embedded Python is installed as well.
 
 ---
 
-## 📦 설치 프로그램 빌드
+## 📦 Building the installer
 
 ```bash
-npm run dist:win   # release/ 에 NSIS 설치 파일과 .sha256 생성
+npm run dist:win   # writes the NSIS installer and a .sha256 file to release/
 ```
 
-`dist:win`은 항상 **구매자 판**(`KSHORTS_EDITION=buyer`)으로 빌드합니다. 구매자 판에는 관리자 로그인 코드가 들어가지 않습니다.
+`dist:win` always builds the **buyer edition** (`KSHORTS_EDITION=buyer`), which contains no admin-login code.
 
 ---
 
-## 🔐 라이선스 키와 관리자 판
+## 🔐 License keys and admin edition
 
-- **일반 로그인:** 라이선스 서버에서 키를 확인하고, 제작할 때마다 토큰을 차감합니다. 서버 응답은 Ed25519 서명으로 검증합니다.
-- **이 저장소에 없는 것:** 서버 주소, 서버 코드, 서명 개인키. 서버 주소는 빌드할 때 `admin.local.json`의 `licenseServer` 또는 환경 변수 `KSHORTS_LICENSE_SERVER`에서 넣습니다. 값이 없으면 라이선스 로그인이 동작하지 않습니다.
-- **관리자 로그인:** 소스에 검증값을 두지 않습니다. 빌드할 때 저장소에 올리지 않는 `admin.local.json` 또는 환경 변수 `KSHORTS_ADMIN_FNV`에서 읽고, 값이 없으면 관리자 로그인이 꺼집니다.
+- **Regular login:** the license server checks the key and deducts tokens per video. Server responses are verified with Ed25519 signatures.
+- **Not in this repository:** the server address, the server code and the signing private key. The server address is injected at build time from `licenseServer` in `admin.local.json` or the `KSHORTS_LICENSE_SERVER` environment variable. Without it, license login does not work.
+- **Admin login:** no verification value lives in the source. It is read at build time from `admin.local.json` (not committed) or the `KSHORTS_ADMIN_FNV` environment variable; without it, admin login is disabled.
 
 ```json
-// admin.local.json (저장소에 올리지 않음, .gitignore 등록됨)
+// admin.local.json (not committed, listed in .gitignore)
 {
   "adminKeyFnv": 0,
   "licenseServer": "https://your-license-server.example"
@@ -177,36 +181,36 @@ npm run dist:win   # release/ 에 NSIS 설치 파일과 .sha256 생성
 
 ---
 
-## 🛡 데이터와 보안
+## 🛡 Data and security
 
-- 프로젝트와 설정은 사용자 데이터 폴더(Electron `userData`) 아래 `kshorts-data`에 저장됩니다.
-- API 키, 토큰, 시크릿, 라이선스 키는 OS 보안 저장소(Windows DPAPI, Electron `safeStorage`)로 암호화해 저장합니다.
-- 빌드본은 `webSecurity`와 `sandbox`를 켠 채로 실행합니다.
-- 업데이트 설치 파일은 허용된 주소에서 받은 것만, SHA-256이 맞을 때만 설치합니다.
-- 외부 도구(ffmpeg · ffprobe)는 셸을 거치지 않고 인자 배열로 실행합니다.
+- Projects and settings are stored under `kshorts-data` in the Electron `userData` folder.
+- API keys, tokens, secrets and the license key are encrypted with the OS key store (Windows DPAPI via Electron `safeStorage`).
+- Packaged builds run with `webSecurity` and `sandbox` enabled.
+- Update installers are accepted only from allowed hosts and only when the SHA-256 matches.
+- External tools (ffmpeg, ffprobe) are run with argument arrays, never through a shell.
 
 ---
 
-## 🗂 폴더 구조
+## 🗂 Project layout
 
 ```
 kshorts-app/
-├─ electron/          메인 프로세스 (렌더링 파이프라인, TTS, 이미지 엔진, 라이선스, 업데이트)
+├─ electron/          main process (render pipeline, TTS, image engines, license, updates)
 │  ├─ main.ts
 │  └─ preload.ts
-├─ src/               화면 (React + TypeScript + TailwindCSS)
-│  ├─ components/     페이지와 모달
-│  ├─ constants/      프리셋, 보이스, 자막 스타일
+├─ src/               renderer (React + TypeScript + TailwindCSS)
+│  ├─ components/     pages and modals
+│  ├─ constants/      presets, voices, subtitle styles
 │  └─ hooks/
 ├─ public/
-│  ├─ bgm/            로열티 프리 배경음악 (직접 합성)
-│  └─ sfx/            효과음 (직접 합성)
-├─ scripts/           빌드 · 시험 · 음원 생성 · 릴리스 스크립트
-└─ docs/screenshots/  README 이미지
+│  ├─ bgm/            royalty-free background music (synthesized)
+│  └─ sfx/            sound effects (synthesized)
+├─ scripts/           build, test, audio generation and release scripts
+└─ docs/screenshots/  README images
 ```
 
 ---
 
-## 📄 라이선스
+## 📄 License
 
 [MIT](LICENSE)
