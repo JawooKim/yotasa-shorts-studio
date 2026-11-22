@@ -274,6 +274,7 @@ export interface ScriptScene {
   videoUrl?: string; // 스톡 비디오 URL 또는 로컬 비디오 파일 경로
   mediaPreviewUrl?: string; // 비디오 썸네일/미리보기 이미지
   videoSource?: 'pexels' | 'pixabay' | 'preset' | 'local';
+  imagePath?: string; // 사용자가 직접 넣은 장면 이미지(로컬 파일 경로). 있으면 AI 이미지 대신 사용
 }
 
 export interface RenderShortsRequest {

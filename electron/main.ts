@@ -3770,6 +3770,20 @@ async function executeRenderPipeline(
         }
       }
 
+      // 4-A2. 사용자가 직접 올린 장면 이미지(로컬 파일)가 있으면 AI 이미지 대신 그대로 쓴다.
+      //       ffmpeg 명령에 원래 파일 이름이 들어가지 않도록 임시 폴더에 안전한 이름으로 복사한다.
+      if (!sceneVideoPath && cs?.imagePath) {
+        const imgSrc = String(cs.imagePath).trim();
+        const ext = (path.extname(imgSrc).toLowerCase().match(/^\.(png|jpe?g|webp|bmp)$/) || ['.png'])[0];
+        if (imgSrc && fs.existsSync(imgSrc) && fs.statSync(imgSrc).isFile()) {
+          const userFramePath = path.join(scenesTempDir, `scene_${s}_user${ext}`);
+          fs.copyFileSync(imgSrc, userFramePath);
+          sceneMediaList[s] = { type: 'image', path: userFramePath };
+          continue;
+        }
+        console.warn(`[User Image] Scene ${s + 1}: 이미지 파일을 찾을 수 없어 AI 이미지로 대체합니다 (${imgSrc}).`);
+      }
+
       // 4-B. If user enabled global stock video mode OR selected pexels as engine, search and retrieve stock video
       //      이미 쓴 영상은 제외하고 검색하며, 쓸 수 있는 새 영상이 없으면 AI 이미지로 대체한다 (중복 사용 금지).
       const shouldSearchStockVideo = !sceneVideoPath && (params.enableStockVideo || settings.imageEngine === 'pexels');
@@ -8068,3 +8082,6 @@ ipcMain.handle('license-set-admin', async (_, enabled: boolean) => {
   licenseState.adminSession = !IS_BUYER_EDITION && Boolean(enabled);
   return licenseState.adminSession;
 });
+
+// 헤드리스 렌더러(factory/)가 Electron 창 없이 같은 제작 엔진을 쓰도록 내보낸다. 앱 동작에는 영향이 없다.
+export { executeRenderPipeline, splitScriptIntoDefaultScenes };

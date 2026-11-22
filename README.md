@@ -135,6 +135,12 @@ flowchart LR
 
 ---
 
+## 🏭 Shorts factory (GitHub Actions)
+
+The same render engine also runs headless in GitHub Actions. Put `shorts/<slug>/job.json` (plus any scene images) on `master`, or paste a job into **Actions → 쇼츠 자동 공장 → Run workflow**. The finished mp4, thumbnail and YouTube copy are published to **Releases**. The job format is in [`shorts/README.md`](shorts/README.md), and the Claude project setup is in [`claude-project/SETUP.md`](claude-project/SETUP.md).
+
+---
+
 ## 🛠 Development
 
 **Requirements:** Node.js 20+, Windows 10/11 64-bit. Video rendering uses the bundled `ffmpeg-static`, so no separate FFmpeg install is needed.
